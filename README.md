@@ -2,4 +2,4 @@
 
 ![Volume OSD Always 1](images/volume-osd-always1.gif)
 
-![Volume OSD Always 2|50](images/volume-osd-always2.gif)
+<img source="https://github.com/alexandrecvieira/volume-osd-always/blob/main/images/volume-osd-alway2.gif" width="600">
