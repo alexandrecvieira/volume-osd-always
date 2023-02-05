@@ -4,7 +4,7 @@ GNOME Shell Extension to show Volume OSD always scrolling over panel volume icon
 
 This extension has only been tested on gnome 43
 
-Install from [GNOME Shell Extensions](https://extensions.gnome.org/extension/38538/volume-osd-always).
+Install from [GNOME Shell Extensions](https://extensions.gnome.org/extension/5742/volume-osd-always/).
 
 ## Manual Installation
 
