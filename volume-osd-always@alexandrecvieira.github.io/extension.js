@@ -37,6 +37,8 @@ const Indicator = GObject.registerClass(
     _init() {
       super._init(0.0, _('Volume OSD Always'), true);
 
+      this.hide();
+
       this._default_sink = Volume.getMixerControl().get_default_sink();
       this.volume_max = Volume.getMixerControl().get_vol_max_norm();
       this.prevSinkVolume = null;
