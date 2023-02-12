@@ -55,11 +55,6 @@ const Indicator = GObject.registerClass(
       this._patch();
     }
 
-    _repatch() {
-      this._unpatch();
-      this._patch();
-    }
-
     _updateVisible() {
       for (const w of this.osdWindows) {
 	w._vbox.remove_child(w._label);
