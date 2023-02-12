@@ -1,6 +1,7 @@
 
 2023-02-12  alexandrecvieira <somebody@someserver.com>
 
+	* Removed unnecessary codes, fix _unpatch function by restoring line out label
 	* Version 4: Fix line out blinking by removing line out label, fix osd width blinking
 	* Version 4: Fix line out blinking by removing line out label, fix osd width blinking
 
