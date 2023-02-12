@@ -88,10 +88,11 @@ const Indicator = GObject.registerClass(
 	}
 	const monitor = -1; // Display volume window on all monitors.
 	const icon = Gio.Icon.new_for_string(VolumeIcons[n]);
-	const label = null;
+	const label = "";
 	Main.osdWindowManager.show(monitor, icon, label, percentage);
+	this._patch();
 	this.prevSinkVolume = sinkVolume;
-      }
+	}
     }
 
     _repatch() {
