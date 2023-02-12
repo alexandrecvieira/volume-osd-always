@@ -24,14 +24,6 @@ const Mainloop = imports.mainloop;
 const PanelMenu = imports.ui.panelMenu;
 const Volume = imports.ui.status.volume;
 
-const VolumeIcons =
-      [
-	'audio-volume-muted-symbolic',
-	'audio-volume-low-symbolic',
-	'audio-volume-medium-symbolic',
-	'audio-volume-high-symbolic'
-      ];
-
 const Indicator = GObject.registerClass(
   class Indicator extends PanelMenu.Button {
     _init() {
@@ -48,51 +40,19 @@ const Indicator = GObject.registerClass(
       });
 
       this._default_sink_changed_id = Volume.getMixerControl().connect('default-sink-changed', () => {
-	//log('DEFAULT-SINK-CHANGED');
 	this._default_sink = Volume.getMixerControl().get_default_sink();           
       });
-      
+
       this._stream_changed_id = Volume.getMixerControl().connect('stream-changed', () => {
-	//log('STREAM-CHANGED');
-	// Show Volume OSD
-	this._showVolumeOSD();
+	this.osdWindows.show();
       });
-      
+
       this._patch();
     }
 
     _repatch() {
       this._unpatch();
       this._patch();
-    }
-
-    _showVolumeOSD() {
-      let sinkVolume = this._default_sink.volume;
-
-      if (this.prevSinkVolume === null){
-	this.prevSinkVolume = sinkVolume; 
-      }
-      
-      if (sinkVolume !== this.prevSinkVolume) {
-	const percentage = sinkVolume / this.volume_max;
-	let n;
-	if (sinkVolume === 0)
-	{
-	  n = 0;
-	}
-	else
-	{
-	  n = parseInt(3 * percentage + 1);
-	  n = Math.max(1, n);
-	  n = Math.min(3, n);
-	}
-	const monitor = -1; // Display volume window on all monitors.
-	const icon = Gio.Icon.new_for_string(VolumeIcons[n]);
-	const label = "";
-	Main.osdWindowManager.show(monitor, icon, label, percentage);
-	this._patch();
-	this.prevSinkVolume = sinkVolume;
-	}
     }
 
     _repatch() {
@@ -102,6 +62,7 @@ const Indicator = GObject.registerClass(
 
     _updateVisible() {
       for (const w of this.osdWindows) {
+	w._vbox.remove_child(w._label);
 	w._numlabel_right.visible = true;
 	w._icon.visible = true;
       }

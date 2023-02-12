@@ -12,7 +12,8 @@ To install from the latest zip file, download the [zip file](https://github.com/
 and extract the downloaded archive to the GNOME Shell Extensions path:
 
 ```bash
-unzip volume-osd-always@alexandrecvieira.github.io.zip -d ~/.local/share/gnome-shell/extensions/volume-osd-always@alexandrecvieira.github.io
+unzip volume-osd-always@alexandrecvieira.github.io.zip -d \
+~/.local/share/gnome-shell/extensions/volume-osd-always@alexandrecvieira.github.io
 ```
 Then restart GNOME Shell. You may either log out and log back in, or enter `Alt+F2` to open the run
 dialog, then type `r` to restart the GNOME Shell.
