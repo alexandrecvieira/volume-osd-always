@@ -17,7 +17,7 @@
 
 /* exported init */
 
-const { Gio, Clutter, GObject, St } = imports.gi;
+const { Clutter, GObject, St } = imports.gi;
 
 const Main = imports.ui.main;
 const Mainloop = imports.mainloop;
@@ -31,16 +31,8 @@ const Indicator = GObject.registerClass(
 
       this.hide();
 
-      this._default_sink = Volume.getMixerControl().get_default_sink();
-      this.volume_max = Volume.getMixerControl().get_vol_max_norm();
-      this.prevSinkVolume = null;
-
       this.layout_manager_id = Main.layoutManager.connect('monitors-changed', () => {
 	this._repatch.bind(this);
-      });
-
-      this._default_sink_changed_id = Volume.getMixerControl().connect('default-sink-changed', () => {
-	this._default_sink = Volume.getMixerControl().get_default_sink();           
       });
 
       this._stream_changed_id = Volume.getMixerControl().connect('stream-changed', () => {
@@ -103,6 +95,7 @@ const Indicator = GObject.registerClass(
 	w._hbox.remove_all_children();
 	w._hbox.add_child(w._icon);
 	w._hbox.add_child(w._vbox);
+	w._vbox.add_child(w._label);
       }
     }
 
@@ -116,9 +109,7 @@ const Indicator = GObject.registerClass(
       }
       this._unpatch();
       if (this._source)
-	Mainloop.source_remove(this._source);
-      if (this._default_sink_changed_id)
-	Volume.getMixerControl().disconnect(this._default_sink_changed_id);   
+	Mainloop.source_remove(this._source);  
       if (this._stream_changed_id)
 	Volume.getMixerControl().disconnect(this._stream_changed_id);
       super._onDestroy();
