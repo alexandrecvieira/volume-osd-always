@@ -1,4 +1,12 @@
 
+2023-02-14  alexandrecvieira <somebody@someserver.com>
+
+	* Fixed Show Volume OSD Always: changing volume slider didn't work, added audio mute/unmute by middle-clicking the speaker icon on the menu bar
+
+2023-02-13  alexandrecvieira <somebody@someserver.com>
+
+	* Re-adding changing volume slider feature
+
 2023-02-12  alexandrecvieira <somebody@someserver.com>
 
 	* Removed unnecessary codes, fix _unpatch function by restoring line out label
