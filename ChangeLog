@@ -1,6 +1,7 @@
 
 2023-02-14  alexandrecvieira <somebody@someserver.com>
 
+	* Description Update
 	* Fixed Show Volume OSD Always: changing volume slider didn't work, added audio mute/unmute by middle-clicking the speaker icon on the menu bar
 
 2023-02-13  alexandrecvieira <somebody@someserver.com>
