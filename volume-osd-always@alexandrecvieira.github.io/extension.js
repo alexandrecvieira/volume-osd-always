@@ -39,12 +39,23 @@ const Indicator = GObject.registerClass(
 
       this.hide();
 
+      if (Main.panel.statusArea.aggregateMenu) {
+        // Gnome 3.36 -> 42
+        this._volume = Main.panel.statusArea.aggregateMenu._volume;
+        this._volumeMenu = this._volume._volumeMenu;
+      } else if (Main.panel.statusArea.quickSettings) {
+        // Gnome 43
+        this._volume = Main.panel.statusArea.quickSettings._volume;
+        this._volumeMenu = this._volume;
+      }
+      
       this.volume_max = Volume.getMixerControl().get_vol_max_norm();
       this.prevSinkVolume = null;
 
       this._default_sink_changed_id = Volume.getMixerControl().connect('default-sink-changed', () => {
         this._default_sink = Volume.getMixerControl().get_default_sink();
-        this._showVolumeOSD();             
+        this._showVolumeOSD();
+        this._updateOutputIcon();
       });
 
       this.layout_manager_id = Main.layoutManager.connect('monitors-changed', () => {
@@ -53,6 +64,15 @@ const Indicator = GObject.registerClass(
 
       this._stream_changed_id = Volume.getMixerControl().connect('stream-changed', () => {
 	this._showVolumeOSD();
+	this._updateOutputIcon();
+      });
+
+      this._volume_event_id = this._volume.connect('button-press-event', (actor, event) => {
+        if (event.get_button() === Clutter.BUTTON_MIDDLE) {
+          this._toggleMuted();
+          return Clutter.EVENT_STOP;
+        }
+        return Clutter.EVENT_PROPAGATE;
       });
 
       this._patch();
@@ -82,6 +102,35 @@ const Indicator = GObject.registerClass(
 	const icon = Gio.Icon.new_for_string(VolumeIcons[n]);
 	Main.osdWindowManager.show(monitor, icon, null, percentage);
 	this.prevSinkVolume = sinkVolume;
+      }
+    }
+
+    _toggleMuted() {
+        if (this._isMuted()) {
+            this._setMuted(false);
+        } else {
+          this._setMuted(true);
+        }
+    }
+
+    _setMuted(value) {
+        if (!this._default_sink) return;
+        this._default_sink.change_is_muted(value);
+    }
+
+    _isMuted() {
+        if (!this._default_sink) return false;
+        return this._default_sink.is_muted;
+    }
+
+    _updateOutputIcon() {
+      const OUTPUT_ICON = this._volumeMenu._output._icon.icon_name;
+      const MUTE_ICON = VolumeIcons[0];
+      
+      if (this._isMuted() && this._volumeMenu._output._icon.icon_name != MUTE_ICON) {
+        this._volumeMenu._output._icon.icon_name = MUTE_ICON;
+      } else if (!this._isMuted() && this._volumeMenu._output._icon.icon_name == MUTE_ICON) {
+        this._volumeMenu._output._icon.icon_name = OUTPUT_ICON;
       }
     }
 
@@ -156,7 +205,9 @@ const Indicator = GObject.registerClass(
       if (this._stream_changed_id)
 	Volume.getMixerControl().disconnect(this._stream_changed_id);
       if (this._default_sink_changed_id)
-            Volume.getMixerControl().disconnect(this._default_sink_changed_id);
+        Volume.getMixerControl().disconnect(this._default_sink_changed_id);
+      if (this._volume_event_id)
+            this._volume.disconnect(this._volume_event_id);
       super._onDestroy();
     }
   });
