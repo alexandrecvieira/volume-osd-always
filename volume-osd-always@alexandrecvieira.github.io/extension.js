@@ -23,7 +23,7 @@ const Main = imports.ui.main;
 const Mainloop = imports.mainloop;
 const PanelMenu = imports.ui.panelMenu;
 const Volume = imports.ui.status.volume;
-
+let OUTPUT_ICON = 'audio-speakers-symbolic';
 const VolumeIcons =
       [
 	'audio-volume-muted-symbolic',
@@ -31,6 +31,7 @@ const VolumeIcons =
 	'audio-volume-medium-symbolic',
 	'audio-volume-high-symbolic'
       ];
+const MUTE_ICON = VolumeIcons[0];
 
 const Indicator = GObject.registerClass(
   class Indicator extends PanelMenu.Button {
@@ -124,9 +125,9 @@ const Indicator = GObject.registerClass(
     }
 
     _updateOutputIcon() {
-      const OUTPUT_ICON = this._volumeMenu._output._icon.icon_name;
-      const MUTE_ICON = VolumeIcons[0];
-      
+      if (this._volumeMenu._output._icon.icon_name != MUTE_ICON) {
+	OUTPUT_ICON = this._volumeMenu._output._icon.icon_name;
+      }      
       if (this._isMuted() && this._volumeMenu._output._icon.icon_name != MUTE_ICON) {
         this._volumeMenu._output._icon.icon_name = MUTE_ICON;
       } else if (!this._isMuted() && this._volumeMenu._output._icon.icon_name == MUTE_ICON) {
